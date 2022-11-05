@@ -54,8 +54,6 @@ class SleepTrackerFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         binding = FragmentSleepTrackerBinding.inflate(inflater, container, false)
 
-//        val application = requireNotNull(this.activity).application
-
         val dataSource = SleepDatabase.getInstance(requireActivity().application).sleepDatabaseDao
 
         val sleepTrackerViewModelFactory = SleepTrackerViewModelFactory(dataSource, requireActivity().application)
@@ -72,7 +70,7 @@ class SleepTrackerFragment : Fragment() {
 
         sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it
+                adapter.submitList(it)
             }
         })
 
