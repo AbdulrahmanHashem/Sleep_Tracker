@@ -35,7 +35,7 @@ import kotlinx.coroutines.withContext
  */
 class SleepTrackerViewModel(val database: SleepDatabaseDao, application: Application) : AndroidViewModel(application) {
     private val tonight = MutableLiveData<SleepNight?>()
-    private val nights = database.getAllNights()
+    val nights = database.getAllNights()
 
     val nightsString = Transformations.map(nights) { nihgts ->
         formatNights(nihgts, application.resources)

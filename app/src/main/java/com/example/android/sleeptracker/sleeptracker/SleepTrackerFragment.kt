@@ -31,6 +31,7 @@ import com.example.android.sleeptracker.R
 import com.example.android.sleeptracker.database.SleepDatabase
 import com.example.android.sleeptracker.database.SleepNight
 import com.example.android.sleeptracker.databinding.FragmentSleepTrackerBinding
+import com.example.android.sleeptracker.sleeptracker.sleeplist.SleepNightAdapter
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -65,6 +66,15 @@ class SleepTrackerFragment : Fragment() {
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
         binding.setLifecycleOwner(this)
+
+        val adapter = SleepNightAdapter()
+        binding.sleepList.adapter = adapter
+
+        sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.data = it
+            }
+        })
 
         sleepTrackerViewModel.navigateToSleepQuality.observe(this.viewLifecycleOwner, Observer { sleepNight ->
             sleepNight?.let {

@@ -9,7 +9,8 @@
         android:label="SleepQualityFragment" >
         <action
             android:id="@+id/action_sleepQualityFragment_to_sleepTrackerFragment"
-            app:destination="@id/sleepTrackerFragment" />
+            app:destination="@id/sleepTrackerFragment"
+            app:popUpTo="@id/sleepTrackerFragment" />
         <argument
             android:name="sleepNightKey"
             app:argType="long" />
