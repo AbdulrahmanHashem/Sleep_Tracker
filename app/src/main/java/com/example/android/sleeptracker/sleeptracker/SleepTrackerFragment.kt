@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -27,11 +28,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.sleeptracker.R
 import com.example.android.sleeptracker.database.SleepDatabase
 import com.example.android.sleeptracker.database.SleepNight
 import com.example.android.sleeptracker.databinding.FragmentSleepTrackerBinding
 import com.example.android.sleeptracker.sleeptracker.sleeplist.SleepNightAdapter
+import com.example.android.sleeptracker.sleeptracker.sleeplist.SleepNightListener
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -63,10 +66,22 @@ class SleepTrackerFragment : Fragment() {
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
 
+        val manager = GridLayoutManager(requireActivity(), 3)
+        binding.sleepList.layoutManager = manager
+
         binding.setLifecycleOwner(this)
 
-        val adapter = SleepNightAdapter()
+        val adapter = SleepNightAdapter(SleepNightListener { nighId ->
+            sleepTrackerViewModel.onSleepNightClicked(nighId)
+        })
         binding.sleepList.adapter = adapter
+
+        sleepTrackerViewModel.navigateToSleepDetails.observe(this.viewLifecycleOwner, Observer { night ->
+            night?.let {
+                this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepDetailFragment(night))
+                sleepTrackerViewModel.doneNavigatingToSleepDetails()
+            }
+        })
 
         sleepTrackerViewModel.nights.observe(viewLifecycleOwner, Observer {
             it?.let {

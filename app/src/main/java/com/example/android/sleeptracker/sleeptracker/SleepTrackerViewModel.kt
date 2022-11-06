@@ -49,6 +49,18 @@ class SleepTrackerViewModel(val database: SleepDatabaseDao, application: Applica
         _navigateToSleepQuality.value = null
     }
 
+    private val _navigateToSleepDetails = MutableLiveData<Long?>()
+    val navigateToSleepDetails: LiveData<Long?>
+        get() = _navigateToSleepDetails
+
+    fun onSleepNightClicked(nightId: Long) {
+        _navigateToSleepDetails.value = nightId
+    }
+
+    fun doneNavigatingToSleepDetails() {
+        _navigateToSleepDetails.value = null
+    }
+
 
     val startButtonVisible = Transformations.map(tonight) {
         null == it
